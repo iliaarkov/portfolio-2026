@@ -1,12 +1,15 @@
 'use client';
 import { Project } from "@/lib/projects";
+import { Locale, translations } from "@/lib/translations";
 
 interface ProjectModalProps {
   project: Project;
+	lang: Locale;
   onClose: () => void;
 }
 
-export const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
+export const ProjectModal = ({ project, lang, onClose }: ProjectModalProps) => {
+	const t = translations[lang];
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm">
       {/* Кнопка закрытия вне окна для удобства или на нем */}

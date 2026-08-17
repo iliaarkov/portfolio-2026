@@ -1,39 +1,34 @@
-import { Project } from "@/lib/projects";
+import { Project } from "../lib/projects";
+import { Locale, translations } from "../lib/translations";
 
-interface ProjectCardProps {
+interface ProjectCard {
   project: Project;
+  lang: Locale;
 }
 
-export const ProjectCard = ({ project }: ProjectCardProps) => {
+export const ProjectCard = ({ project, lang }: ProjectCard) => {
+  const t = translations[lang];
+
   return (
-		<div className="group p-6 rounded-2xl border border-zinc-800 bg-zinc-900/20 hover:border-blue-500/50 transition-all duration-300 flex flex-col h-full">
-			<div className="flex justify-between items-start mb-4">
-				<h3 className="text-xl font-bold group-hover:text-blue-400 transition-colors">
-					<a href={project.link} target="_blank" rel="noopener noreferrer">
-						{project.title} <span className="text-xs opacity-0 group-hover:opacity-100 transition-opacity">↗</span>
-					</a>
-				</h3>
-			</div>
-			
-			<p className="text-zinc-400 text-sm mb-6 flex-grow">
-				{project.description}
-			</p>
-
-			<div className="flex flex-wrap gap-2 mb-8">
-				{project.stack.map((tech) => (
-					<span key={tech} className="text-[10px] uppercase border border-zinc-800 px-2 py-1 rounded text-zinc-500">
-						{tech}
-					</span>
-				))}
-			</div>
-
-			<a 
-				href={project.github} 
-				target="_blank" 
-				className="mt-auto text-xs font-mono text-zinc-600 hover:text-white transition-colors"
-			>
-				[ VIEW_SOURCE_CODE ]
-			</a>
-		</div>
+    <div className="group p-6 rounded-2xl border border-zinc-800 bg-zinc-900/20 hover:border-blue-500/50 transition-all duration-300 flex flex-col h-full shadow-lg">
+      <h3 className="text-xl font-bold mb-3 group-hover:text-blue-400 transition-colors">
+        {project.title}
+      </h3>
+      <p className="text-zinc-400 text-sm mb-6 flex-grow leading-relaxed">
+        {project.description[lang]}
+      </p>
+      <div className="flex flex-wrap gap-2 mb-8">
+        {project.stack.map((tech) => (
+          <span key={tech} className="text-[10px] uppercase border border-zinc-800 px-2 py-1 rounded text-zinc-500 font-mono">
+            {tech}
+          </span>
+        ))}
+      </div>
+      <div className="flex justify-between items-center">
+        <span className="text-xs font-mono text-zinc-600 hover:text-white transition-colors uppercase">
+          {t.viewCode}
+        </span>
+      </div>
+    </div>
   );
 };

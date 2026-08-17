@@ -12,7 +12,7 @@ export interface Project {
 export const projects: Project[] = [
   {
     id: 1,
-    title: "Wine Intuition",
+    title: "Intuitivo - Wine Cooperative",
     description: "Разработка полнофункциональной системы для винного кооператива: от каталога до личного кабинета и управления заказами.",
     longDescription: "Здесь ты можешь расписать подробно: какие были сложности, как ты проектировал базу данных MySQL, как реализовал личный кабинет и систему лояльности. Это текст, который будет виден в модалке.",
 		stack: ["PHP", "MySQL", "JavaScript", "UI/UX"],

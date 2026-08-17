@@ -6,6 +6,8 @@ import { projects, Project } from "../lib/projects";
 import { ProjectCard } from "../components/ProjectCard";
 import { ProjectModal } from "../components/ProjectModal";
 import { ContactForm } from "../components/ContactForm";
+import { translations, Locale } from "../lib/translations";
+import { LangSwitcher } from "../components/LangSwitcher";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,37 +20,39 @@ const geistMono = Geist_Mono({
 });
 
 export default function Home() {
-  // Состояние для выбранного проекта (для модалки)
+  const [lang, setLang] = useState<Locale>('ru');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  
+  const t = translations[lang];
 
   return (
     <div className={`${geistSans.variable} ${geistMono.variable} font-sans bg-black text-white min-h-screen`}>
       <main className="flex flex-col items-center p-8">
         
-        {/* Header / Navigation */}
+        {/* Header */}
         <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex mt-10">
           <h1 className="text-4xl font-bold italic tracking-tighter">
             ILIA ARKOV <span className="text-blue-500">.</span>
           </h1>
-          <div className="flex gap-4 items-center">
-             <span className="px-4 py-2 rounded-full border border-zinc-800 bg-zinc-900/50">
-               Fullstack Developer
-             </span>
+          <div className="flex gap-6 items-center">
+            <LangSwitcher currentLang={lang} setLang={setLang} />
+            <span className="hidden md:inline px-4 py-2 rounded-full border border-zinc-800 bg-zinc-900/50 text-zinc-300">
+              {t.role}
+            </span>
           </div>
         </div>
 
         {/* Hero Section */}
         <div className="mt-32 text-center">
           <h2 className="text-5xl md:text-7xl font-extrabold mb-6 bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent">
-            Building digital products.
+            {t.heroTitle}
           </h2>
           <p className="text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed">
-            Специализируюсь на React, Node.js и современных веб-технологиях.
-            Ранее создавал продукты для винного кооператива и школы контраварийного вождения.
+            {t.heroSub}
           </p>
         </div>
 
-        {/* Projects */}
+        {/* Projects Grid */}
         <div className="mt-24 grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl">
           {projects.map((project) => (
             <div 
@@ -56,52 +60,50 @@ export default function Home() {
               onClick={() => setSelectedProject(project)} 
               className="cursor-pointer"
             >
-              <ProjectCard project={project} />
+              <ProjectCard project={project} lang={lang} />
             </div>
           ))}
         </div>
 
-        {/* Modal Windows */}
+        {/* Modal Logic */}
         {selectedProject && (
           <ProjectModal 
-            project={selectedProject} 
+            project={selectedProject}
+            lang={lang}
             onClose={() => setSelectedProject(null)} 
           />
         )}
 
-        {/* About / Skills */}
-        <section className="mt-48 w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-16">
+        {/* About Section */}
+        <section className="mt-48 w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-16 border-t border-zinc-900 pt-24">
           <div>
-            <h2 className="text-3xl font-bold mb-8 text-blue-500 font-mono italic">01. ABOUT ME</h2>
+            <h2 className="text-3xl font-bold mb-8 text-blue-500 font-mono italic">
+              {t.aboutTitle}
+            </h2>
             <div className="space-y-4 text-zinc-400 leading-relaxed">
-              <p>
-                Студент-отличник <span className="text-white font-medium">РТУ МИРЭА</span> по специальности «Прикладная информатика». 
-                Мой путь в IT начался с разработки систем на PHP и MySQL, что дало мне прочный фундамент в понимании архитектуры данных.
-              </p>
-              <p>
-                Помимо кодинга, я имею опыт в <span className="text-white font-medium">профессиональном копирайтинге и контент-менеджменте</span> (проекты 12SIRENS, Зелёный ДОМ). 
-                Это позволяет мне создавать продукты, которые не только работают технически, но и эффективно общаются с пользователем.
-              </p>
-              <p>
-                Активно использую и обучаю AI-модели, применяя навыки глубокого промпт-инжиниринга для ускорения разработки.
-              </p>
+              <p>{t.aboutText1}</p>
+              <p>{t.aboutText2}</p>
+              <p>{t.aboutText3}</p>
             </div>
           </div>
 
+          {/* Skills Column */}
           <div>
-            <h2 className="text-3xl font-bold mb-8 text-blue-500 font-mono italic">02. SKILLS</h2>
+            <h2 className="text-3xl font-bold mb-8 text-blue-500 font-mono italic">
+              {t.skillsTitle}
+            </h2>
             <div className="grid grid-cols-2 gap-8">
               <div>
-                <h4 className="text-white font-bold mb-4 text-sm uppercase tracking-widest">Frontend</h4>
+                <h4 className="text-white font-bold mb-4 text-sm uppercase tracking-widest">{t.frontend}</h4>
                 <ul className="text-zinc-500 text-sm space-y-2 font-mono">
                   <li>— React / Next.js</li>
                   <li>— TypeScript</li>
                   <li>— Tailwind CSS</li>
-                  <li>— SCSS / Figma</li>
+                  <li>— Figma</li>
                 </ul>
               </div>
               <div>
-                <h4 className="text-white font-bold mb-4 text-sm uppercase tracking-widest">Backend</h4>
+                <h4 className="text-white font-bold mb-4 text-sm uppercase tracking-widest">{t.backend}</h4>
                 <ul className="text-zinc-500 text-sm space-y-2 font-mono">
                   <li>— Node.js</li>
                   <li>— PHP / MySQL</li>
@@ -113,12 +115,12 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Contact Form */}
-        <ContactForm />
+        {/* Contact Form Component */}
+        <ContactForm lang={lang} />
 
         {/* Footer */}
         <footer className="mt-32 pb-10 text-zinc-600 text-xs tracking-widest uppercase font-mono">
-          © 2026 Ilia Arkov. Built with Next.js & TypeScript.
+          {t.footer}
         </footer>
       </main>
     </div>
