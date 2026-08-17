@@ -15,7 +15,7 @@ export const ProjectCard = ({ project, lang }: ProjectCard) => {
         {project.title}
       </h3>
       <p className="text-zinc-400 text-sm mb-6 flex-grow leading-relaxed">
-        {project.description[lang]}
+        {project.description[lang as Locale]}
       </p>
       <div className="flex flex-wrap gap-2 mb-8">
         {project.stack.map((tech) => (

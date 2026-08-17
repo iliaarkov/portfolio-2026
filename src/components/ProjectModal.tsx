@@ -45,7 +45,7 @@ export const ProjectModal = ({ project, lang, onClose }: ProjectModalProps) => {
             <div className="md:col-span-2 space-y-4">
               <h3 className="text-lg font-bold text-blue-500">О проекте</h3>
               <p className="text-zinc-300 leading-relaxed whitespace-pre-line">
-                {project.longDescription}
+                {project.longDescription[lang as Locale]}
               </p>
             </div>
 
