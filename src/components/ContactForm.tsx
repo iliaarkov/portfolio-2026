@@ -34,7 +34,7 @@ export const ContactForm = () => {
 
   return (
     <section className="mt-32 w-full max-w-2xl mx-auto pb-20">
-      <h2 className="text-3xl font-bold mb-8 text-center font-mono italic text-blue-500 underline decoration-zinc-800 underline-offset-8">
+      <h2 className="text-3xl font-bold mb-8 text-left font-mono italic text-blue-500 underline decoration-zinc-800 underline-offset-8">
         03. GET IN TOUCH
       </h2>
       <form onSubmit={handleSubmit} className="space-y-4">
