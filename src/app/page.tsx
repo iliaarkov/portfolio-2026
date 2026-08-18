@@ -44,13 +44,13 @@ export default function Home() {
         </div>
 
         {/* Hero Section */}
-				<section className="w-full max-w-5xl mt-32 md:mt-48 text-center">
+				<section className="w-full max-w-5xl mt-32 md:mt-48">
 					<Reveal>
-						<div className="mt-32 text-center">
+						<div className="text-center flex flex-col items-center"> {/* Добавили центрирование контейнера */}
 							<h2 className="text-5xl md:text-8xl font-extrabold mb-8 bg-gradient-to-b from-white to-zinc-500 bg-clip-text text-transparent leading-[1.1]">
 								{t.heroTitle}
 							</h2>
-							<p className="text-center text-xl text-zinc-400 max-w-2xl leading-relaxed">
+							<p className="text-center text-xl text-zinc-400 max-w-2xl leading-relaxed mx-auto"> {/* Добавили mx-auto */}
 								{t.heroSub}
 							</p>
 						</div>
@@ -121,17 +121,30 @@ export default function Home() {
 					</Reveal>
 				</section>
 
-				{/* Playground */}
+				{/* PLAYGROUND */}
 				<section className="w-full max-w-5xl mt-48 border-t border-zinc-900 pt-24 text-left">
 					<Reveal>
 						<h2 className="text-2xl font-bold mb-12 text-blue-500 font-mono italic uppercase tracking-tighter">
 							{t.playgroundTitle}
 						</h2>
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+							
+							{/* КАРТОЧКА 1: КОНВЕРТЕР */}
 							<Link href="/playground/currency">
-								<div className="group p-8 rounded-3xl border border-zinc-800 bg-zinc-900/20 hover:border-blue-500/50 transition-all cursor-pointer">
+								<div className="group p-8 rounded-3xl border border-zinc-800 bg-zinc-900/20 hover:border-blue-500/50 transition-all cursor-pointer h-full">
 									<h3 className="text-xl font-bold mb-4 text-white uppercase italic">{t.converterTitle}</h3>
 									<p className="text-zinc-500 text-sm mb-8 leading-relaxed">{t.converterSub}</p>
+									<span className="text-[10px] font-bold text-blue-500 group-hover:translate-x-2 transition-transform inline-block font-mono uppercase tracking-widest">
+										{t.tryTool}
+									</span>
+								</div>
+							</Link>
+
+							{/* КАРТОЧКА 2: КАНБАН (TASKS) */}
+							<Link href="/playground/tasks">
+								<div className="group p-8 rounded-3xl border border-zinc-800 bg-zinc-900/20 hover:border-blue-500/50 transition-all cursor-pointer h-full">
+									<h3 className="text-xl font-bold mb-4 text-white uppercase italic">{t.tasksTitle}</h3>
+									<p className="text-zinc-500 text-sm mb-8 leading-relaxed">{t.tasksSub}</p>
 									<span className="text-[10px] font-bold text-blue-500 group-hover:translate-x-2 transition-transform inline-block font-mono uppercase tracking-widest">
 										{t.tryTool}
 									</span>
@@ -140,6 +153,7 @@ export default function Home() {
 							<div className="p-8 rounded-3xl border border-zinc-800 bg-zinc-900/5 opacity-50 flex items-center justify-center italic text-zinc-700 text-xs font-mono uppercase tracking-widest">
 								[ Next_Experiment_In_Progress ]
 							</div>
+
 						</div>
 					</Reveal>
 				</section>

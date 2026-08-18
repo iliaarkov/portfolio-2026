@@ -55,15 +55,14 @@ export default function KanbanBoard() {
   const [inputValue, setInputValue] = useState('');
 
   // Загрузка из LocalStorage
-  useEffect(() => {
+	useEffect(() => {
 		const saved = localStorage.getItem('portfolio-tasks');
 		if (saved) {
 			try {
-				// Мы добавляем "as Task[]", чтобы указать тип явно
-				const parsedTasks = JSON.parse(saved) as Task[];
-				setTasks(parsedTasks);
-			} catch (error) {
-				console.error("Ошибка парсинга задач:", error);
+				const parsed = JSON.parse(saved) as Task[];
+				setTasks(parsed);
+			} catch (e) {
+				console.error("Failed to load tasks", e);
 			}
 		}
 	}, []);
