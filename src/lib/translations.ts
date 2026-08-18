@@ -7,7 +7,7 @@ export const translations = {
     heroSub: "Специализируюсь на React, Node.js и современных веб-технологиях. Ранее разрабатывал решения для бизнеса и образовательных проектов.",
     featuredProjTitle: "01. ИЗБРАННЫЕ ПРОЕКТЫ",
 		aboutTitle: "02. ОБО МНЕ",
-    aboutText1: "Студент-отличник РТУ МИРЭА по специальности «Прикладная информатика». Мой путь в IT начался с разработки систем на PHP и MySQL, что дало мне прочный фундамент в понимании архитектуры данных.",
+    aboutText1: "Выпускник РТУ МИРЭА с отличием по специальности «Прикладная информатика». Мой путь в IT начался с разработки систем на PHP и MySQL, что дало мне прочный фундамент в понимании архитектуры данных.",
     aboutText2: "Помимо кодинга, я имею опыт в профессиональном копирайтинге и контент-менеджменте (проекты 12SIRENS, Зелёный ДОМ). Это позволяет мне создавать продукты, которые не только работают технически, но и эффективно общаются с пользователем.",
     aboutText3: "Активно использую и обучаю AI-модели, применяя навыки глубокого промпт-инжиниринга для ускорения разработки и повышения качества кода.",
     skillsTitle: "03. НАВЫКИ",
@@ -40,7 +40,15 @@ export const translations = {
     calculating: "Считаю...",
     techInfo: "TECH_INFO: Используется Frankfurter API. Реализован Debounce и валидация ввода.",
     useCase: "USE_CASE: Финансовые инструменты и E-commerce системы.",
-    footer: "© 2026 Илья Арьков. Построено на Next.js & TypeScript"
+    tasksTitle: "Канбан-доска",
+		tasksSub: "Управление задачами с функцией Drag-and-Drop. Демонстрация сложного UI-взаимодействия и управления состоянием.",
+		tasksBack: "← НА_ГЛАВНУЮ",
+		tasksTodo: "НУЖНО СДЕЛАТЬ",
+		tasksProgress: "В ПРОЦЕССЕ",
+		tasksDone: "ГОТОВО",
+		tasksPlaceholder: "Новая задача...",
+		tasksAdd: "ДОБАВИТЬ",
+		footer: "© 2026 Илья Арьков. Построено на Next.js & TypeScript"
   },
   en: {
     role: "Fullstack Developer",
@@ -48,7 +56,7 @@ export const translations = {
     heroSub: "Specializing in React, Node.js, and modern web technologies. Previously developed solutions for business and educational projects.",
     featuredProjTitle: "01. FEATURED PROJECTS",
 		aboutTitle: "02. ABOUT ME",
-    aboutText1: "Honors student at RTU MIREA specializing in Applied Informatics. My IT journey began with developing systems on PHP and MySQL, providing a solid foundation in data architecture.",
+    aboutText1: "RTU MIREA graduate with honors specializing in Applied Informatics. My IT journey began with developing systems on PHP and MySQL, providing a solid foundation in data architecture.",
     aboutText2: "Beyond coding, I have experience in professional copywriting and content management (12SIRENS, Green House projects). This allows me to create products that not only work technically but also communicate effectively with users.",
     aboutText3: "Actively using and training AI models, applying deep prompt engineering skills to accelerate development and improve code quality.",
     skillsTitle: "03. SKILLS",
@@ -81,7 +89,15 @@ export const translations = {
     calculating: "Calculating...",
     techInfo: "TECH_INFO: Using Frankfurter API. Debounce and input validation implemented.",
     useCase: "USE_CASE: Financial tools and E-commerce systems.",
-    footer: "© 2026 Ilia Arkov. Built with Next.js & TypeScript"
+    tasksTitle: "Kanban Board",
+		tasksSub: "Task management with Drag-and-Drop functionality. Demonstration of complex UI interaction and state management.",
+		tasksBack: "← BACK_TO_HOME",
+		tasksTodo: "TO DO",
+		tasksProgress: "IN PROGRESS",
+		tasksDone: "DONE",
+		tasksPlaceholder: "New task...",
+		tasksAdd: "ADD TASK",
+		footer: "© 2026 Ilia Arkov. Built with Next.js & TypeScript"
   },
   es: {
     role: "Desarrollador Fullstack",
@@ -89,7 +105,7 @@ export const translations = {
     heroSub: "Especializado en React, Node.js y tecnologías web modernas. Previamente desarrollé soluciones para negocios y proyectos educativos.",
     featuredProjTitle: "01. PROYECTOS DESTACADOS",
 		aboutTitle: "02. SOBRE MÍ",
-    aboutText1: "Estudiante de honor en RTU MIREA con especialización en Informática Aplicada. Mi camino en IT comenzó desarrollando sistemas en PHP y MySQL, lo que me dio una base sólida en arquitectura de datos.",
+    aboutText1: "RTU MIREA graduado con honores con especialización en Informática Aplicada. Mi camino en IT comenzó desarrollando sistemas en PHP y MySQL, lo que me dio una base sólida en arquitectura de datos.",
     aboutText2: "Más allá de la programación, tengo experiencia en redacción profesional y gestión de contenidos (proyectos 12SIRENS, Green House). Esto me permite crear productos que no solo funcionan técnicamente, sino que también se comunican eficazmente con los usuarios.",
     aboutText3: "Uso y entreno activamente modelos de IA, aplicando habilidades de ingeniería de prompts para acelerar el desarrollo y mejorar la calidad del código.",
     skillsTitle: "03. HABILIDADES",
@@ -122,6 +138,14 @@ export const translations = {
     calculating: "Calculando...",
     techInfo: "TECH_INFO: Usando la API de Frankfurter. Debounce y validación de entrada implementados.",
     useCase: "USE_CASE: Herramientas financieras y sistemas de comercio electrónico.",
-    footer: "© 2026 Ilia Arkov. Desarrollado con Next.js y TypeScript"
+    tasksTitle: "Tablero Kanban",
+		tasksSub: "Gestión de tareas con funcionalidad Drag-and-Drop. Demostración de interacción compleja de UI y gestión de estado.",
+		tasksBack: "← VOLVER_AL_INICIO",
+		tasksTodo: "POR HACER",
+		tasksProgress: "EN PROGRESO",
+		tasksDone: "HECHO",
+		tasksPlaceholder: "Nueva tarea...",
+		tasksAdd: "AÑADIR",
+		footer: "© 2026 Ilia Arkov. Desarrollado con Next.js y TypeScript"
   }
 };

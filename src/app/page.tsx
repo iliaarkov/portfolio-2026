@@ -50,7 +50,7 @@ export default function Home() {
 							<h2 className="text-5xl md:text-8xl font-extrabold mb-8 bg-gradient-to-b from-white to-zinc-500 bg-clip-text text-transparent leading-[1.1]">
 								{t.heroTitle}
 							</h2>
-							<p className="text-xl text-zinc-400 max-w-2xl leading-relaxed">
+							<p className="text-center text-xl text-zinc-400 max-w-2xl leading-relaxed">
 								{t.heroSub}
 							</p>
 						</div>
