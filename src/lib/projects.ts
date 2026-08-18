@@ -15,7 +15,7 @@ export interface Project {
 export const projects: Project[] = [
   {
     id: 1,
-    title: "Wine Intuition",
+    title: "Intuitivo – Wine Cooperative",
     description: {
       ru: "Разработка полнофункциональной системы для винного кооператива.",
       en: "Full-featured system development for a wine cooperative.",

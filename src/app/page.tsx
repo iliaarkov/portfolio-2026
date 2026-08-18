@@ -8,6 +8,7 @@ import { ProjectModal } from "../components/ProjectModal";
 import { ContactForm } from "../components/ContactForm";
 import { translations, Locale } from "../lib/translations";
 import { LangSwitcher } from "../components/LangSwitcher";
+import { Reveal } from "../components/Reveal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,7 +23,6 @@ const geistMono = Geist_Mono({
 export default function Home() {
   const [lang, setLang] = useState<Locale>('ru');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  
   const t = translations[lang];
 
   return (
@@ -43,25 +43,29 @@ export default function Home() {
         </div>
 
         {/* Hero Section */}
-        <div className="mt-32 text-center">
-          <h2 className="text-5xl md:text-7xl font-extrabold mb-6 bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent">
-            {t.heroTitle}
-          </h2>
-          <p className="text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed">
-            {t.heroSub}
-          </p>
-        </div>
+				<Reveal>
+					<div className="mt-32 text-center">
+						<h2 className="text-5xl md:text-7xl font-extrabold mb-6 bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent">
+							{t.heroTitle}
+						</h2>
+						<p className="text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+							{t.heroSub}
+						</p>
+					</div>
+				</Reveal>
 
         {/* Projects Grid */}
         <div className="mt-24 grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl">
           {projects.map((project) => (
-            <div 
-              key={project.id} 
-              onClick={() => setSelectedProject(project)} 
-              className="cursor-pointer"
-            >
-              <ProjectCard project={project} lang={lang} />
-            </div>
+						<Reveal key={project.id}>
+							<div 
+								key={project.id} 
+								onClick={() => setSelectedProject(project)} 
+								className="cursor-pointer"
+							>
+								<ProjectCard project={project} lang={lang} />
+							</div>
+						</Reveal>
           ))}
         </div>
 
@@ -76,48 +80,53 @@ export default function Home() {
 
         {/* About Section */}
         <section className="mt-48 w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-16 border-t border-zinc-900 pt-24">
-          <div>
-            <h2 className="text-3xl font-bold mb-8 text-blue-500 font-mono italic">
-              {t.aboutTitle}
-            </h2>
-            <div className="space-y-4 text-zinc-400 leading-relaxed">
-              <p>{t.aboutText1}</p>
-              <p>{t.aboutText2}</p>
-              <p>{t.aboutText3}</p>
-            </div>
-          </div>
+          <Reveal>
+						<div>
+							<h2 className="text-3xl font-bold mb-8 text-blue-500 font-mono italic">
+								{t.aboutTitle}
+							</h2>
+							<div className="space-y-4 text-zinc-400 leading-relaxed">
+								<p>{t.aboutText1}</p>
+								<p>{t.aboutText2}</p>
+								<p>{t.aboutText3}</p>
+							</div>
+						</div>
+					</Reveal>
 
           {/* Skills Column */}
-          <div>
-            <h2 className="text-3xl font-bold mb-8 text-blue-500 font-mono italic">
-              {t.skillsTitle}
-            </h2>
-            <div className="grid grid-cols-2 gap-8">
-              <div>
-                <h4 className="text-white font-bold mb-4 text-sm uppercase tracking-widest">{t.frontend}</h4>
-                <ul className="text-zinc-500 text-sm space-y-2 font-mono">
-                  <li>— React / Next.js</li>
-                  <li>— TypeScript</li>
-                  <li>— Tailwind CSS</li>
-                  <li>— Figma</li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-white font-bold mb-4 text-sm uppercase tracking-widest">{t.backend}</h4>
-                <ul className="text-zinc-500 text-sm space-y-2 font-mono">
-                  <li>— Node.js</li>
-                  <li>— PHP / MySQL</li>
-                  <li>— Python / C++</li>
-                  <li>— REST API</li>
-                </ul>
-              </div>
-            </div>
-          </div>
+					<Reveal>
+						<div>
+							<h2 className="text-3xl font-bold mb-8 text-blue-500 font-mono italic">
+								{t.skillsTitle}
+							</h2>
+							<div className="grid grid-cols-2 gap-8">
+								<div>
+									<h4 className="text-white font-bold mb-4 text-sm uppercase tracking-widest">{t.frontend}</h4>
+									<ul className="text-zinc-500 text-sm space-y-2 font-mono">
+										<li>— React / Next.js</li>
+										<li>— TypeScript</li>
+										<li>— Tailwind CSS</li>
+										<li>— Figma</li>
+									</ul>
+								</div>
+								<div>
+									<h4 className="text-white font-bold mb-4 text-sm uppercase tracking-widest">{t.backend}</h4>
+									<ul className="text-zinc-500 text-sm space-y-2 font-mono">
+										<li>— Node.js</li>
+										<li>— PHP / MySQL</li>
+										<li>— Python / C++</li>
+										<li>— REST API</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</Reveal>
         </section>
 
         {/* Contact Form Component */}
-        <ContactForm lang={lang} />
-
+				<Reveal>
+        	<ContactForm lang={lang} />
+				</Reveal>
         {/* Footer */}
         <footer className="mt-32 pb-10 text-zinc-600 text-xs tracking-widest uppercase font-mono">
           {t.footer}
