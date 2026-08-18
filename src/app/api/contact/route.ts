@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     }
 
     const text = `
-🚀 *Новое сообщение с портфолио!*
+🚀 *Новое сообщение с сайта-портфолио!*
 
 👤 *Имя:* ${name}
 📧 *Email:* ${email}

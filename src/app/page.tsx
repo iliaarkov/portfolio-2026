@@ -44,7 +44,7 @@ export default function Home() {
         </div>
 
         {/* Hero Section */}
-				<section className="w-full max-w-5xl mt-32 md:mt-48 text-left">
+				<section className="w-full max-w-5xl mt-32 md:mt-48 text-center">
 					<Reveal>
 						<div className="mt-32 text-center">
 							<h2 className="text-5xl md:text-8xl font-extrabold mb-8 bg-gradient-to-b from-white to-zinc-500 bg-clip-text text-transparent leading-[1.1]">
@@ -61,7 +61,7 @@ export default function Home() {
 				<section className="w-full max-w-5xl mt-48">
 					<Reveal>
 						<h2 className="text-2xl font-bold mb-12 text-blue-500 font-mono italic uppercase tracking-tighter decoration-zinc-800 underline underline-offset-[12px]">
-							01. Featured Projects
+							{t.featuredProjTitle}
 						</h2>
 					</Reveal>
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
