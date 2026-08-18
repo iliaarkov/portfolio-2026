@@ -9,6 +9,7 @@ import { ContactForm } from "../components/ContactForm";
 import { translations, Locale } from "../lib/translations";
 import { LangSwitcher } from "../components/LangSwitcher";
 import { Reveal } from "../components/Reveal";
+import Link from "next/link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -122,6 +123,39 @@ export default function Home() {
 						</div>
 					</Reveal>
         </section>
+
+				{/* Playground */}
+				<Reveal>
+					<section className="mt-48 w-full max-w-5xl">
+						<h2 className="text-3xl font-bold mb-12 text-blue-500 font-mono italic underline decoration-zinc-800 underline-offset-8">
+							03. TECHNICAL PLAYGROUND
+						</h2>
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+							<Link href="/playground/currency">
+								<div className="group p-8 rounded-3xl border border-zinc-800 bg-zinc-900/10 hover:border-blue-500/50 transition-all cursor-pointer">
+									<div className="flex justify-between items-start mb-6">
+										<div className="p-3 bg-blue-500/10 rounded-2xl text-blue-500">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+										</div>
+										<span className="text-[10px] font-mono text-zinc-600 group-hover:text-zinc-300 transition-colors uppercase tracking-widest">Interactive Demo</span>
+									</div>
+									<h3 className="text-xl font-bold mb-3 text-white">Currency Converter API</h3>
+									<p className="text-zinc-500 text-sm leading-relaxed mb-6">
+										Интерактивный виджет для расчета курсов валют в реальном времени. Демонстрация работы с внешними REST API и управления состоянием React.
+									</p>
+									<span className="text-xs font-bold text-blue-500 group-hover:translate-x-2 transition-transform inline-block uppercase tracking-tighter">
+										Try Tool →
+									</span>
+								</div>
+							</Link>
+							
+							{/* Здесь можно будет добавить второй Playground позже (например, Task Board) */}
+							<div className="p-8 rounded-3xl border border-zinc-800 bg-zinc-900/5 opacity-50 flex items-center justify-center italic text-zinc-700 text-sm">
+								Next experiment in progress...
+							</div>
+						</div>
+					</section>
+				</Reveal>
 
         {/* Contact Form Component */}
 				<Reveal>
