@@ -13,8 +13,6 @@ import {
   DragOverEvent,
   useDroppable,
   rectIntersection,
-  DragOverlay,
-  defaultDropAnimationSideEffects
 } from '@dnd-kit/core';
 import { 
   arrayMove, 
@@ -93,7 +91,6 @@ export default function KanbanBoard() {
   const t = translations[lang];
   const [tasks, setTasks] = useState<Task[]>([]);
   const [inputValue, setInputValue] = useState('');
-  const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem('portfolio-tasks');
@@ -115,7 +112,6 @@ export default function KanbanBoard() {
     setInputValue('');
   };
 
-  // ЛОГИКА ПЕРЕМЕЩЕНИЯ МЕЖДУ КОЛОНКАМИ
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
     if (!over) return;
@@ -126,7 +122,6 @@ export default function KanbanBoard() {
     const activeTask = tasks.find(t => t.id === activeId);
     if (!activeTask) return;
 
-    // Если перетаскиваем над колонкой
     const isOverAColumn = ['todo', 'progress', 'done'].includes(overId as string);
 
     if (isOverAColumn && activeTask.column !== overId) {
@@ -136,16 +131,20 @@ export default function KanbanBoard() {
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    setActiveTask(null);
     if (!over) return;
 
     if (active.id !== over.id) {
       const oldIndex = tasks.findIndex((i) => i.id === active.id);
       const newIndex = tasks.findIndex((i) => i.id === over.id);
-      if (tasks[oldIndex].column === tasks[newIndex].column) {
+      
+      if (oldIndex !== -1 && newIndex !== -1 && tasks[oldIndex].column === tasks[newIndex].column) {
         setTasks((items) => arrayMove(items, oldIndex, newIndex));
       }
     }
+  };
+
+  const deleteTask = (id: string) => {
+    setTasks(prev => prev.filter(t => t.id !== id));
   };
 
   return (
@@ -182,9 +181,24 @@ export default function KanbanBoard() {
             onDragEnd={handleDragEnd}
           >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {renderColumn('todo', t.tasksTodo, tasks.filter(t => t.column === 'todo'), (id) => setTasks(tasks.filter(t => t.id !== id)))}
-              {renderColumn('progress', t.tasksProgress, tasks.filter(t => t.column === 'progress'), (id) => setTasks(tasks.filter(t => t.id !== id)))}
-              {renderColumn('done', t.tasksDone, tasks.filter(t => t.column === 'done'), (id) => setTasks(tasks.filter(t => t.id !== id)))}
+              <DroppableColumn 
+                id="todo" 
+                title={t.tasksTodo} 
+                tasks={tasks.filter(t => t.column === 'todo')} 
+                onDelete={deleteTask} 
+              />
+              <DroppableColumn 
+                id="progress" 
+                title={t.tasksProgress} 
+                tasks={tasks.filter(t => t.column === 'progress')} 
+                onDelete={deleteTask} 
+              />
+              <DroppableColumn 
+                id="done" 
+                title={t.tasksDone} 
+                tasks={tasks.filter(t => t.column === 'done')} 
+                onDelete={deleteTask} 
+              />
             </div>
           </DndContext>
         </div>
