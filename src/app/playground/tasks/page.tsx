@@ -6,12 +6,13 @@ import { Reveal } from '@/components/Reveal';
 import { translations, Locale } from '@/lib/translations';
 import { 
   DndContext, 
-  closestCenter, 
   PointerSensor, 
   useSensor, 
   useSensors,
   DragEndEvent,
-  DragStartEvent,
+  DragOverEvent,
+  useDroppable,
+  rectIntersection,
   DragOverlay,
   defaultDropAnimationSideEffects
 } from '@dnd-kit/core';
@@ -29,65 +30,75 @@ interface Task {
   column: 'todo' | 'progress' | 'done';
 }
 
-const SortableItem = ({ task, onDelete, onMove }: { 
-  task: Task; 
-  onDelete: (id: string) => void;
-  onMove: (id: string) => void;
-}) => {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: task.id });
+// --- КОМПОНЕНТ КАРТОЧКИ ---
+const SortableItem = ({ task, onDelete }: { task: Task; onDelete: (id: string) => void }) => {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ 
+    id: task.id,
+    data: { type: 'Task', task }
+  });
   
   const style = {
     transform: CSS.Translate.toString(transform),
     transition,
-    opacity: isDragging ? 0.5 : 1,
+    opacity: isDragging ? 0.3 : 1,
   };
 
   return (
-    <div 
-      ref={setNodeRef} 
-      style={style} 
-      className="relative group mb-3"
-    >
+    <div ref={setNodeRef} style={style} className="relative group mb-3 outline-none">
       <div 
-        {...attributes} 
-        {...listeners}
+        {...attributes} {...listeners}
         className="p-4 bg-zinc-900 border border-zinc-800 rounded-xl cursor-grab active:cursor-grabbing hover:border-blue-500/50 transition-colors text-sm text-zinc-300 shadow-lg"
       >
         {task.content}
       </div>
-      
-      {/* Кнопки управления (вне зоны захвата для DND) */}
-      <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-        <button 
-          onClick={() => onMove(task.id)}
-          className="p-1 bg-blue-600 rounded text-[8px] text-white hover:bg-blue-500"
-        >
-          →
-        </button>
-        <button 
-          onClick={() => onDelete(task.id)}
-          className="p-1 bg-zinc-800 rounded text-[8px] text-white hover:bg-red-900"
-        >
-          ✕
-        </button>
-      </div>
+      <button 
+        onClick={() => onDelete(task.id)}
+        className="absolute top-2 right-2 p-1 bg-zinc-800 rounded text-[8px] text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-900"
+      >
+        ✕
+      </button>
     </div>
   );
 };
 
+// --- КОМПОНЕНТ КОЛОНКИ ---
+const DroppableColumn = ({ id, title, tasks, onDelete }: { id: string; title: string; tasks: Task[]; onDelete: (id: string) => void }) => {
+  const { setNodeRef, isOver } = useDroppable({ id });
+
+  return (
+    <div 
+      ref={setNodeRef}
+      className={`flex flex-col p-5 rounded-[2rem] w-full min-h-[450px] transition-all duration-300 border ${
+        isOver ? 'bg-blue-500/5 border-blue-500/50 scale-[1.02]' : 'bg-zinc-950/50 border-zinc-900'
+      }`}
+    >
+      <h3 className="text-[10px] font-mono font-bold tracking-[0.3em] text-zinc-600 mb-6 uppercase text-center">
+        {title} ({tasks.length})
+      </h3>
+      
+      <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
+        <div className="flex-grow">
+          {tasks.map(task => (
+            <SortableItem key={task.id} task={task} onDelete={onDelete} />
+          ))}
+        </div>
+      </SortableContext>
+    </div>
+  );
+};
+
+// --- ОСНОВНАЯ СТРАНИЦА ---
 export default function KanbanBoard() {
   const [lang, setLang] = useState<Locale>('ru');
   const t = translations[lang];
-  
   const [tasks, setTasks] = useState<Task[]>([]);
   const [inputValue, setInputValue] = useState('');
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem('portfolio-tasks');
     if (saved) {
-      try {
-        setTasks(JSON.parse(saved) as Task[]);
-      } catch (e) { console.error(e); }
+      try { setTasks(JSON.parse(saved) as Task[]); } catch (e) { console.error(e); }
     }
   }, []);
 
@@ -95,84 +106,57 @@ export default function KanbanBoard() {
     localStorage.setItem('portfolio-tasks', JSON.stringify(tasks));
   }, [tasks]);
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8, // Начинаем тащить только если сдвинули мышь на 8 пикселей
-      },
-    })
-  );
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
 
   const addTask = () => {
     if (!inputValue.trim()) return;
-    const newTask: Task = {
-      id: `task-${Date.now()}`,
-      content: inputValue,
-      column: 'todo'
-    };
+    const newTask: Task = { id: `task-${Date.now()}`, content: inputValue, column: 'todo' };
     setTasks([...tasks, newTask]);
     setInputValue('');
   };
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  // ЛОГИКА ПЕРЕМЕЩЕНИЯ МЕЖДУ КОЛОНКАМИ
+  const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
     if (!over) return;
 
-    if (active.id !== over.id) {
-      setTasks((items) => {
-        const oldIndex = items.findIndex((i) => i.id === active.id);
-        const newIndex = items.findIndex((i) => i.id === over.id);
-        return arrayMove(items, oldIndex, newIndex);
-      });
+    const activeId = active.id;
+    const overId = over.id;
+
+    const activeTask = tasks.find(t => t.id === activeId);
+    if (!activeTask) return;
+
+    // Если перетаскиваем над колонкой
+    const isOverAColumn = ['todo', 'progress', 'done'].includes(overId as string);
+
+    if (isOverAColumn && activeTask.column !== overId) {
+      setTasks(prev => prev.map(t => t.id === activeId ? { ...t, column: overId as Task['column'] } : t));
     }
   };
 
-  const fastMove = (id: string) => {
-    setTasks(prev => prev.map(task => {
-      if (task.id === id) {
-        const nextCol: Record<string, Task['column']> = { todo: 'progress', progress: 'done', done: 'todo' };
-        return { ...task, column: nextCol[task.column] };
-      }
-      return task;
-    }));
-  };
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    setActiveTask(null);
+    if (!over) return;
 
-  const renderColumn = (colId: Task['column'], title: string) => {
-    const columnTasks = tasks.filter(t => t.column === colId);
-    
-    return (
-      <div className="flex flex-col bg-zinc-950/50 border border-zinc-900 p-5 rounded-[2rem] w-full min-h-[400px]">
-        <h3 className="text-[10px] font-mono font-bold tracking-[0.3em] text-zinc-600 mb-6 uppercase text-center">{title}</h3>
-        
-        <SortableContext items={columnTasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
-          <div className="flex-grow">
-            {columnTasks.map(task => (
-              <SortableItem 
-                key={task.id} 
-                task={task} 
-                onDelete={(id) => setTasks(tasks.filter(t => t.id !== id))}
-                onMove={fastMove}
-              />
-            ))}
-          </div>
-        </SortableContext>
-      </div>
-    );
+    if (active.id !== over.id) {
+      const oldIndex = tasks.findIndex((i) => i.id === active.id);
+      const newIndex = tasks.findIndex((i) => i.id === over.id);
+      if (tasks[oldIndex].column === tasks[newIndex].column) {
+        setTasks((items) => arrayMove(items, oldIndex, newIndex));
+      }
+    }
   };
 
   return (
     <div className="min-h-screen bg-black text-white p-6 md:p-12 font-sans">
       <Reveal>
-        <div className="max-w-6xl mx-auto mt-10 md:mt-20">
+        <div className="max-w-6xl mx-auto mt-10">
           <div className="flex justify-between items-center mb-12">
-            <Link href="/" className="text-zinc-500 hover:text-white transition-colors font-mono text-[10px] uppercase tracking-[0.3em]">
-              {t.tasksBack}
-            </Link>
+            <Link href="/" className="text-zinc-500 hover:text-white transition-colors font-mono text-[10px] uppercase tracking-[0.3em]">{t.tasksBack}</Link>
             <div className="flex gap-4">
               {(['ru', 'en', 'es'] as Locale[]).map((l) => (
-                <button key={l} onClick={() => setLang(l)} className={`text-[10px] font-bold ${lang === l ? 'text-blue-500' : 'text-zinc-700'}`}>
-                  {l.toUpperCase()}
-                </button>
+                <button key={l} onClick={() => setLang(l)} className={`text-[10px] font-bold ${lang === l ? 'text-blue-500' : 'text-zinc-700'}`}>{l.toUpperCase()}</button>
               ))}
             </div>
           </div>
@@ -182,26 +166,25 @@ export default function KanbanBoard() {
 
           <div className="flex gap-4 mb-16 max-w-md">
             <input 
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              value={inputValue} 
+              onChange={(e) => setInputValue(e.target.value)} 
               onKeyDown={(e) => e.key === 'Enter' && addTask()}
-              placeholder={t.tasksPlaceholder}
-              className="flex-grow bg-zinc-900 border border-zinc-800 p-4 rounded-2xl focus:outline-none focus:border-blue-600 text-sm"
+              placeholder={t.tasksPlaceholder} 
+              className="flex-grow bg-zinc-900 border border-zinc-800 p-4 rounded-2xl focus:outline-none focus:border-blue-600 text-sm" 
             />
-            <button onClick={addTask} className="bg-white text-black px-6 rounded-2xl font-bold text-xs hover:bg-blue-500 hover:text-white transition-all uppercase tracking-widest">
-              {t.tasksAdd}
-            </button>
+            <button onClick={addTask} className="bg-white text-black px-6 rounded-2xl font-bold text-xs hover:bg-blue-500 hover:text-white transition-all uppercase tracking-widest">{t.tasksAdd}</button>
           </div>
 
           <DndContext 
             sensors={sensors} 
-            collisionDetection={closestCenter} 
+            collisionDetection={rectIntersection} 
+            onDragOver={handleDragOver}
             onDragEnd={handleDragEnd}
           >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {renderColumn('todo', t.tasksTodo)}
-              {renderColumn('progress', t.tasksProgress)}
-              {renderColumn('done', t.tasksDone)}
+              {renderColumn('todo', t.tasksTodo, tasks.filter(t => t.column === 'todo'), (id) => setTasks(tasks.filter(t => t.id !== id)))}
+              {renderColumn('progress', t.tasksProgress, tasks.filter(t => t.column === 'progress'), (id) => setTasks(tasks.filter(t => t.id !== id)))}
+              {renderColumn('done', t.tasksDone, tasks.filter(t => t.column === 'done'), (id) => setTasks(tasks.filter(t => t.id !== id)))}
             </div>
           </DndContext>
         </div>
